@@ -1,0 +1,33 @@
+version: "3.9"
+
+services:
+    machine:
+        build:
+            context: $HOME/repo/node_course/practice_one/
+            dockerfile: $HOME/repo/node_course/local_deploy/Dockerfile
+        volumes:
+            - $HOME/repo/node_course/practice_one/:/code
+            - /code/node_modules
+        ports:
+            - "4000:4000"
+        networks:
+            - mynetwork
+
+    db:
+        build:
+            context: .
+            dockerfile: $HOME/repo/node_course/local_deploy/Dockerfile_mysql
+        container_name: mysql
+        restart: always
+        ports:
+            - "3306:3306"
+        env_file: 
+            - $HOME/repo/node_course/practice_one/.env
+        volumes:
+            - ../db:/var/lib/mysql:rw
+        networks:
+            - mynetwork
+
+networks:
+    mynetwork:
+        driver: bridge
